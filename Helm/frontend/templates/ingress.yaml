@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fusioniq
+  namespace: fusioniq
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/tags: Environment=prod,Team=test,Project=fusioniq
+    alb.ingress.kubernetes.io/group.name: fusioniq
+    alb.ingress.kubernetes.io/subnets: {{ join ", " .Values.ingress.subnets }}
+spec:
+  ingressClassName: alb
+  rules:
+  - host: royalreddy.site
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: web
+            port:
+              number: 80
